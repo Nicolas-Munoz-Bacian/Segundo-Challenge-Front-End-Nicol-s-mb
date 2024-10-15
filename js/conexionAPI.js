@@ -1,49 +1,47 @@
-async function listarProductos() {
+// API functions
+
+export async function añadirProductos() {
     try {
-        const conexion = await fetch("http://localhost:3000/products");
-        const conexionConvertida = await conexion.json();
-        return conexionConvertida;
+        const response = await fetch('http://localhost:3000/products');
+        if (!response.ok) {
+            throw new Error('Error al obtener productos');
+        }
+        return await response.json();
     } catch (error) {
-        console.error('Error al listar productos:', error);
+        console.error('Error en la solicitud GET:', error);
+        throw error;
     }
 }
 
-async function enviarCard(titulo, price, url, imagen) {
+export async function enviarProducto(producto) {
     try {
-        const conexion = await fetch("http://localhost:3000/products", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                name: titulo,
-                price: price,
-                url: url,
-                image: imagen
-            })
+        const response = await fetch('http://localhost:3000/products', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(producto)
         });
-        const conexionConvertida = await conexion.json();
-        return conexionConvertida;
+
+        if (!response.ok) {
+            throw new Error('Error al enviar el producto');
+        }
+
+        return await response.json();
     } catch (error) {
         console.error('Error al enviar producto:', error);
+        throw error;
     }
 }
 
-async function buscarProductos(palabraClave) {
+export async function eliminarProducto(id) {
     try {
-        const conexion = await fetch(`http://localhost:3000/products?q=${palabraClave}`);
-        const conexionConvertida = await conexion.json();
-        return conexionConvertida;
+        const response = await fetch(`http://localhost:3000/products/${id}`, {
+            method: 'DELETE'
+        });
+        if (!response.ok) {
+            throw new Error('Error al eliminar el producto');
+        }
     } catch (error) {
-        console.error('Error al buscar productos:', error);
+        console.error('Error al eliminar producto:', error);
     }
 }
 
-export const conexionAPI = {
-    listarProductos,
-    enviarCard,
-    buscarProductos
-};
-
-// Puedes probar las funciones como necesarias
-// listarProductos().then(data => console.log(data));
-// enviarCard('Nuevo Producto', 100, 'https://example.com/image.jpg', 'some-image.jpg').then(data => console.log(data));
-// buscarProductos('Stormtrooper').then(data => console.log(data));
