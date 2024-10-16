@@ -1,55 +1,59 @@
-// Importar función desde el archivo de API
+// Importar funciones desde la API
 import { enviarProducto, añadirProductos, eliminarProducto } from './conexionAPI.js';
 
 const productsContainer = document.getElementById('products-container');
 const productForm = document.getElementById('product-form');
-const clearFormButton = document.getElementById('clearFormBtn');// Obteniendo el botón de limpiar
+const clearFormButton = document.getElementById('clearFormBtn');
 
 // Cargar productos al iniciar
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const productos = await añadirProductos(); // Obtener productos desde la API
-        renderProducts(productos); // Renderizar los productos
+        const productos = await añadirProductos();
+        renderProducts(productos);
     } catch (error) {
         console.error('Error al inicializar:', error);
     }
 });
 
-// Manejar el evento de agregar producto
+// Evento para agregar un producto
 productForm.addEventListener('submit', async event => {
-    event.preventDefault(); // Evitar envío por defecto
-    
+    event.preventDefault();
+
     const name = document.querySelector("[data-name]").value.trim();
     const price = document.querySelector("[data-price]").value.trim();
-    const url = document.querySelector("[data-image]").value.trim();
-    
+    const url = document.querySelector("[data-url]").value.trim();
+
     if (!name || !price || !url) {
         alert('Por favor, completa todos los campos.');
-        return;
-    }
-
-    if (!isValidURL(url)) {
-        alert('Por favor, ingresa una URL válida.');
         return;
     }
 
     const newProduct = { name, price: parseFloat(price), url };
 
     try {
+        console.log('Enviando producto:', newProduct);
         await enviarProducto(newProduct);
         alert('Producto agregado exitosamente.');
-        renderProducts(await añadirProductos()); // Actualizar el listado de productos
-        clearForm(); // Limpiar el formulario después de agregar
+        updateProductList();
+        clearForm();
     } catch (error) {
         console.error('Error al agregar producto:', error);
         alert('Ocurrió un error al agregar el producto.');
     }
+    
 });
 
+// Evento para limpiar el formulario
+clearFormButton.addEventListener('click', clearForm);
 
-// Función para renderizar los productos en el DOM
-async function renderProducts(products) {
-    productsContainer.innerHTML = ''; // Limpiar el contenido anterior
+// Función para limpiar el formulario
+function clearForm() {
+    productForm.reset();
+}
+
+// Función para renderizar los productos
+function renderProducts(products) {
+    productsContainer.innerHTML = '';
 
     products.forEach(product => {
         const productCard = `
@@ -66,71 +70,35 @@ async function renderProducts(products) {
                 </div>
             </div>
         `;
-        productsContainer.innerHTML += productCard; // Añadir la tarjeta al contenedor
+        productsContainer.innerHTML += productCard;
     });
 
-      // Añadir eventos a los botones de borrar después de renderizar
-      
-      document.querySelectorAll('.btn__eliminar__producto').forEach(button => {
-        button.addEventListener('click', handleDelete);
-      });attachDeleteEventListeners();
-    }
-    
-    // Función para limpiar el formulario
-    function clearForm() {
-        productForm.reset(); // Resetea todos los campos del formulario
-    }
-    
-    // Función para manejar la eliminación de un producto
-    function attachDeleteEventListeners() {
-        document.querySelectorAll('.btn__eliminar__producto').forEach(button => {
-            button.addEventListener('click', async event => {
-                const productId = button.getAttribute('data-id');
-                try {
-                    await eliminarProducto(productId); // Eliminar producto de la API
-                    alert('Producto eliminado exitosamente.');
-                    renderProducts(await añadirProductos()); // Actualizar el listado de productos
-                } catch (error) {
-                    console.error('Error al eliminar producto:', error);
-                    alert('Ocurrió un error al eliminar el producto.');
-                }
-            });
-        });
-    }
+    attachDeleteEventListeners();
+}
 
- // Añadir eventos a los botones de borrar después de renderizar
- document.querySelectorAll('.btn__eliminar__producto').forEach(button => {
-    button.addEventListener('click', async event => {
-        const productId = button.getAttribute('data-id');
-        try {
-            await eliminarProducto(productId);
-            alert('Producto eliminado exitosamente.');
-            renderProducts(await añadirProductos());
-        } catch (error) {
-            console.error('Error al eliminar producto:', error);
-            alert('Ocurrió un error al eliminar el producto.');
-        }
-    });
-});
+// Función para actualizar la lista de productos
+async function updateProductList() {
+    try {
+        const updatedProducts = await añadirProductos();
+        renderProducts(updatedProducts);
+    } catch (error) {
+        console.error('Error al actualizar la lista de productos:', error);
+    }
+}
 
+// Función para manejar la eliminación de productos
 function attachDeleteEventListeners() {
     document.querySelectorAll('.btn__eliminar__producto').forEach(button => {
-        button.addEventListener('click', async event => {
+        button.addEventListener('click', async () => {
             const productId = button.getAttribute('data-id');
             try {
                 await eliminarProducto(productId);
                 alert('Producto eliminado exitosamente.');
-                renderProducts(await añadirProductos());
+                updateProductList();
             } catch (error) {
                 console.error('Error al eliminar producto:', error);
                 alert('Ocurrió un error al eliminar el producto.');
             }
         });
     });
-}
-
-function clearForm() {
-    document.querySelector("[data-name]").value = '';
-    document.querySelector("[data-price]").value = '';
-    document.querySelector("[data-image]").value = '';
 }

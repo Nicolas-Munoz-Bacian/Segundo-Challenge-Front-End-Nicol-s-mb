@@ -15,7 +15,7 @@ export async function añadirProductos() {
 
 export async function enviarProducto(producto) {
     try {
-        const response = await fetch('http://localhost:3000/products', {
+        const response = await fake('http://localhost:3000/products', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(producto)
@@ -42,6 +42,7 @@ export async function eliminarProducto(id) {
         }
     } catch (error) {
         console.error('Error al eliminar producto:', error);
+        throw error;
     }
 }
 

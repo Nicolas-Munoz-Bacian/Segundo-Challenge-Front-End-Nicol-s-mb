@@ -11,15 +11,18 @@ document.addEventListener("DOMContentLoaded", () => {
         const url = document.querySelector("[data-url]").value.trim();
         
         if (!name || !price || !url) {
+            console.log('Campos incompletos'); // Log de depuración
             alert('Por favor, completa todos los campos.');
             return;
         }
 
-        const newProduct = { name, price, url };
+        const newProduct = { name, price: parseFloat(price), url };
 
         try {
             await enviarProducto(newProduct);
             alert('Producto agregado exitosamente.');
+            renderProducts(await añadirProductos());
+            clearForm();
             productForm.reset();
             // Lógica adicional para actualizar la lista de productos si es necesario
         } catch (error) {

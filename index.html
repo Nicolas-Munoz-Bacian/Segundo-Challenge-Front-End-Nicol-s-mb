@@ -11,6 +11,8 @@
     <!-- Fuente del Proyecto Raleway -->
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap" rel="stylesheet">
     <title>AluraGeek</title>
+    <!-- Incluye jQuery antes de tu código JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
 
 <body>
@@ -102,7 +104,6 @@
                           <p class="name">Caballero en 3D</p>
                           <div class="card-container--value">
                             <p class="price">$ 10.000</p>
-                            <!-- Botones de eliminación en cada producto -->
                             <button class="btn__eliminar__producto" type="button">
                               <img src="./assets/bote-de-basura.png" alt="Eliminar producto">
                               </button>
@@ -114,21 +115,22 @@
     </section> 
 
       
-          <!-- Sección de Agregar Producto -->
-          <section class="agregar_producto">
-            <form class="agregar_producto_forma" id="product-form" data-formulario>
-              <h1 class="agregar_producto_titulo">AGREGAR PRODUCTO:</h1>
-              <div class="formulario__campo">
-                <input type="text" id="product-name" placeholder="Nombre del producto" required data-name>
-                <input type="number" id="product-price" placeholder="Precio del producto" required data-price>
-                <input type="url" id="product-image" placeholder="URL de la imagen" required data-url>
-                <div class="botones">
-                  <button type="submit" class="boton__enviar">Agregar</button>
-                  <button type="button" id="clearFormBtn" class="boton__limpiar">Limpiar</button>
-                </div>
-              </div>
-            </form>
-          </section>
+<!-- Sección de Agregar Producto -->
+<section class="agregar_producto">
+  <form class="agregar_producto_forma" id="product-form" data-formulario>
+      <h1 class="agregar_producto_titulo">AGREGAR PRODUCTO:</h1>
+      <div class="formulario__campo">
+          <input type="text" id="product-name" placeholder="Nombre del producto" required data-name>
+          <input type="number" id="product-price" placeholder="Precio del producto" required data-price>
+          <input type="url" id="product-image" placeholder="URL de la imagen" required data-image>
+          <div class="botones">
+              <button type="submit" class="boton__enviar">Agregar</button>
+              <button type="button" id="clearFormBtn" class="boton__limpiar">Limpiar</button>
+          </div>
+      </div>
+  </form>
+</section>
+
 
 </main>
 
